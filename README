@@ -1,0 +1,9 @@
+A node app using Twilio to use phones as a distributed speaker system.
+
+Run on a web accessible server.
+Point the twilio voice request url to SERVER/call.
+Visit SERVER/ in the browser.
+Call your twilio number from a phone.
+There are currently 4 "channels". Each call gets assigned to a channel.
+
+Press keys on the keyboard to trigger off the samples to the channels.
