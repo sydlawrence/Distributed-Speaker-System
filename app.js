@@ -74,7 +74,7 @@ var sounds = {
     mp3: "http://astleystems.s3.amazonaws.com/v16.mp3"
   },
   j: {
-    channel:1,
+    channel:2,
     mp3: "http://astleystems.s3.amazonaws.com/v17.mp3"
   },
 

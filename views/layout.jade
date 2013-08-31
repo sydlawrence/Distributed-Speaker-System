@@ -50,7 +50,7 @@ html
 
 
         for (var i in data.sounds) {
-          var sound = $("<div class='sound'/>");
+          var sound = $("<div class='sound' data-channel='"+data.sounds[i].channel+"'/>");
           sound.data("button", i);
           sound.text(i);
           $("#sounds").append(sound);

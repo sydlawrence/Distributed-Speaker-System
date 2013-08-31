@@ -67,4 +67,16 @@ a {
 .sound.active, .speaker.active {
   background:rgba(0,255,0,0.1) !important;
 }
+.sound[data-channel="0"] {
+  box-shadow:inset 0px 0px 5px 3px #CC6789;
+}
+.sound[data-channel="1"] {
+  box-shadow:inset 0px 0px 5px 3px #483842;
+}
+.sound[data-channel="2"] {
+  box-shadow:inset 0px 0px 5px 3px #1FD3E1;
+}
+.sound[data-channel="3"] {
+  box-shadow:inset 0px 0px 5px 3px #A31B3F;
+}
 
