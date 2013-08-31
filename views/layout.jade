@@ -1,0 +1,42 @@
+!!!
+html
+  head
+    title= title
+    link(rel='stylesheet', href='/stylesheets/style.css')
+    script(src='http://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js')
+    script(src='/socket.io/socket.io.js')
+    script.
+      var socket = io.connect();
+      $(window).on("keypress", function(e) {
+        console.log(e.which);
+        var key = String.fromCharCode(e.which);
+        if (e.which == 13) {
+          key = "enter";
+        }
+        if (e.which == 32) {
+          key = "space";
+        }
+        socket.emit('keypress',key);
+      })
+      socket.on("setup", function(data) {
+        console.log(data);
+        console.log("setup");
+      });
+      socket.on("call", function(data) {
+        console.log(data);
+        console.log("new speaker");
+      });
+      socket.on("sound", function(data) {
+        console.log(data);
+        console.log("new sound");
+      });
+
+      /*
+      call => speaker
+      sound => sound
+      */
+
+
+
+  body!= body
+
