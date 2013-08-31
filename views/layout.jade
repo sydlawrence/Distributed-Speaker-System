@@ -5,10 +5,17 @@ html
     link(rel='stylesheet', href='/stylesheets/style.css')
     script(src='http://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js')
     script(src='/socket.io/socket.io.js')
+    script(src='javascripts/Channel.js')
+    script(src='javascripts/Speaker.js')
     script.
+
+      formatNumber = function(number) {
+        return "..."+number.slice(number.length-5,number.length);
+      }
+
       var socket = io.connect();
+
       $(window).on("keypress", function(e) {
-        console.log(e.which);
         var key = String.fromCharCode(e.which);
         if (e.which == 13) {
           key = "enter";
@@ -16,19 +23,64 @@ html
         if (e.which == 32) {
           key = "space";
         }
+        $('.sound').each(function() {
+          var button = $(this);
+          if (button.data("button") == key) {
+            button.addClass("active");
+            setTimeout(function() {
+              button.removeClass("active");
+            }, 1000);
+          }
+        });
+
         socket.emit('keypress',key);
-      })
+      });
+
+      var channels = [];
+
       socket.on("setup", function(data) {
-        console.log(data);
-        console.log("setup");
+        for (var i = 0; i< data.channelCount; i++) {
+          var channel = new Channel();
+          channels.push(channel);
+          var rendered = channel.render();
+          rendered.data("channel",i);
+          rendered.css("width", 100/data.channelCount + "%");
+          $("#channels").append(rendered);
+        }
+
+
+        for (var i in data.sounds) {
+          var sound = $("<div class='sound'/>");
+          sound.data("button", i);
+          sound.text(i);
+          $("#sounds").append(sound);
+        }
       });
       socket.on("call", function(data) {
-        console.log(data);
-        console.log("new speaker");
+        var speaker = new Speaker(data.speaker.name, data.speaker.channel);
+        var rendered = speaker.render();
+        rendered.data("name", data.speaker.name);
+        data.body = formatNumber(data.body);
+        rendered.html(data.body);
+        $("#channels .channel").each(function() {
+          var $this = $(this);
+          if ($this.data("channel") === data.speaker.channel) {
+            $('#no_speakers').remove();
+            $this.append(rendered);
+          }
+        })
+
       });
       socket.on("sound", function(data) {
-        console.log(data);
-        console.log("new sound");
+        $("#channels .channel").each(function() {
+          var $this = $(this);
+          if ($this.data("channel") === data.channel) {
+            $this.find(".speaker").addClass("active");
+            setTimeout(function() {
+              $this.find(".speaker").removeClass("active");
+            }, 1000);
+          }
+        })
       });
 
       /*

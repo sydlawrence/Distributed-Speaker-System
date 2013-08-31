@@ -1,8 +1,70 @@
 body {
-  padding: 50px;
+  padding: 20px;
   font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
+}
+
+h1,h2 {
+  margin:0;
+  margin-bottom:10px;
+  margin-top:30px;
+  padding:0;
+}
+
+h1 {
+  text-align: center;
 }
 
 a {
   color: #00B7FF;
 }
+
+.channel, .sound {
+  box-sizing:border-box;
+  padding:20px;
+  display:inline-block;
+}
+.channel {
+  padding:0 20px;
+}
+
+.sound, .speaker {
+  padding:10px 0;
+  width:11.111%;
+  line-height:20px;
+  text-align:center;
+  background:#C1B166;
+  font-weight: bold;
+  border:5px solid #fff;
+  transition:300ms all;
+  text-shadow:-1px 1px 3px #fff;
+}
+
+.speaker {
+  color:#fff;
+  text-shadow:-1px -1px 3px #000;
+}
+
+#no_speakers .channel {
+  width:100%;
+}
+
+.channel:nth-child(1) .speaker {
+  background:#CC6789;
+}
+.channel:nth-child(2) .speaker {
+  background:#483842;
+}
+.channel:nth-child(3) .speaker {
+  background:#1FD3E1;
+}
+.channel:nth-child(4) .speaker {
+  background:#A31B3F;
+}
+
+.speaker {
+  width:100%;
+}
+.sound.active, .speaker.active {
+  background:rgba(0,255,0,0.1) !important;
+}
+

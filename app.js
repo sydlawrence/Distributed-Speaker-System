@@ -183,7 +183,8 @@ var io = require('socket.io').listen(app);
 
 io.sockets.on('connection', function (socket) {
   socket.emit("setup", {
-    channelCount: channelCount
+    channelCount: channelCount,
+    sounds: sounds
   })
   socket.on('keypress', function (data) {
     var sound = sounds[data];
@@ -202,9 +203,10 @@ sound => sound
 
 app.get('/', routes.index);
 
-app.get("/call", function(req, res) {
+app.post("/call", function(req, res) {
   var speaker = createSpeaker();
-  io.sockets.emit('call',{speaker:speaker, body:req.body});
+  if (!req.body.From) req.body.From = "+447515354472";
+  io.sockets.emit('call',{speaker:speaker, body:req.body.From});
   res.send("<Response><Say>please wait</Say>"+speaker.response()+"</Response>");
 });
 
