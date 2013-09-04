@@ -1,4 +1,10 @@
+// include the node twilio helper library
+var twilio = require('twilio');
+
+// define how many channels you want to be available
 var channelCount = 4;
+
+
 
 var speakerCount = 0;
 
@@ -125,15 +131,13 @@ var Speaker = function(name, channel) {
     status = mp3;
   }
 
-  this.response = function() {
-    var response = "";
+  this.response = function(resp) {
     if (status) {
-      response += "<Play>"+status+"</Play>";
+      resp.play(status);
       status = false;
     }
-    response += "<Redirect>/status?name="+name+"</Redirect>";
-
-    return response;
+    resp.redirect("/status?name="+name);
+    return resp;
   }
 
   return this;
@@ -150,8 +154,8 @@ for (var i = 0; i < channelCount; i++) {
 
 var express = require('express')
   , routes = require('./routes');
-
 var app = module.exports = express.createServer();
+var io = require('socket.io').listen(app);
 
 // Configuration
 
@@ -179,7 +183,6 @@ function playNote(channel, mp3) {
 
 // Routes
 
-var io = require('socket.io').listen(app);
 
 io.sockets.on('connection', function (socket) {
   socket.emit("setup", {
@@ -195,25 +198,21 @@ io.sockets.on('connection', function (socket) {
   });
 });
 
-
-/*
-call => speaker
-sound => sound
-*/
-
 app.get('/', routes.index);
 
 app.post("/call", function(req, res) {
   var speaker = createSpeaker();
   if (!req.body.From) req.body.From = "+447515354472";
   io.sockets.emit('call',{speaker:speaker, body:req.body.From});
-  res.send("<Response><Say>please wait</Say>"+speaker.response()+"</Response>");
+  var twiml = new twilio.TwimlResponse();
+  twiml.say("please wait");
+  res.send(speaker.response(twiml).toString());
 });
 
 app.post("/status", function(req, res) {
   var speaker = findSpeaker(req.query.name);
-  var response = speaker.response();
-  res.send("<Response>"+response+"</Response>");
+  var twiml = new twilio.TwimlResponse();
+  res.send(speaker.response(twiml).toString());
 });
 
 app.listen(1338);
